@@ -8,6 +8,7 @@ import Login from "./components/Auth/Login";
 import Layout from "./components/Layout/Layout";
 import TransactionsList from "./components/Transactions/TransactionsList";
 import CategoriesList from "./components/Categories/CategoriesList";
+import SummaryPage from "./components/Summary/SummaryPage";
 
 function App() {
   const queryClient = useQueryClient();
@@ -62,10 +63,10 @@ function App() {
       {isAuthenticated ? (
         <Routes>
           <Route element={<Layout onLogout={() => logout(false)} />}>
+            <Route path="/resumen" element={<SummaryPage />} />
             <Route path="/transacciones" element={<TransactionsList />} />
             <Route path="/categorias" element={<CategoriesList />} />
-            <Route path="*" element={<Navigate to="/transacciones" replace />} />
-          </Route>
+<Route path="*" element={<Navigate to="/resumen" replace />} />          </Route>
         </Routes>
       ) : (
         <Login onLogin={handleLogin} sessionExpired={sessionExpired} />

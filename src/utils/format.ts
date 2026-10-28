@@ -33,3 +33,14 @@ export const formatMonth = (date: Date): string => {
   const text = date.toLocaleDateString("es-MX", { month: "long", year: "numeric" });
   return text.charAt(0).toUpperCase() + text.slice(1);
 };
+
+// "2026-10" (formato que pide /api/resumen)
+export const toYearMonth = (date: Date): string => `${date.getFullYear()}-${pad2(date.getMonth() + 1)}`;
+
+// "2026-10" -> "oct 26"
+export const formatShortMonth = (yearMonth: string): string => {
+  const [year, month] = yearMonth.split("-").map(Number);
+  return new Date(year, month - 1, 1)
+    .toLocaleDateString("es-MX", { month: "short", year: "2-digit" })
+    .replace(".", "");
+};

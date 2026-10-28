@@ -21,10 +21,13 @@ import { useState } from "react";
 import { getCurrentMonth } from "../../utils/format";
 import type { SelectedMonthContext } from "../../hooks/useSelectedMonth";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+
 
 const DRAWER_WIDTH = 220;
 
 const menuItems = [
+  { label: "Resumen", path: "/resumen", icon: <DashboardIcon /> },
   { label: "Transacciones", path: "/transacciones", icon: <ReceiptLongIcon /> },
   { label: "Categorías", path: "/categorias", icon: <CategoryIcon /> },
 ];

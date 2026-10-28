@@ -8,7 +8,7 @@ import type { PageResponse, TransactionResponse } from "../../types/TransactionT
 import { deleteTransaction, getTransactions } from "../../api/transactionApi";
 import { formatCurrency, formatDate, getMonthRange } from "../../utils/format";
 import { useSelectedMonth } from "../../hooks/useSelectedMonth";
-import MonthSelector from "../common/MonthSelector";
+import MonthSelector from "../Common/MonthSelector";
 import AddTransaction from "./AddTransaction";
 import EditTransaction from "./EditTransaction";
 
