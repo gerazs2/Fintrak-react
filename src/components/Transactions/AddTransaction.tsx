@@ -46,7 +46,7 @@ function AddTransaction() {
 
     return (
         <>
-            <Button variant="contained" onClick={handleClickOpen}>
+            <Button variant="outlined" onClick={handleClickOpen}>
                 Nueva transacción
             </Button>
 

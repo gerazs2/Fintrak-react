@@ -1,5 +1,7 @@
 import { DialogContent, MenuItem, Stack, TextField } from "@mui/material";
 import type { TransactionRequest } from "../../types/TransactionType";
+import { useCategories } from "../../hooks/useCategory";
+import type { CategoryResponse } from "../../types/CategoryTypes";
 
 type DialogFormProps = {
   transaction: TransactionRequest;
@@ -7,6 +9,8 @@ type DialogFormProps = {
 };
 
 function TransactionDialogContent({ transaction, handleChange }: DialogFormProps) {
+  const { data: categorias = [], isLoading } = useCategories();
+
   return (
     <DialogContent>
       <Stack spacing={2} sx={{ mt: 1 }}>
@@ -23,13 +27,7 @@ function TransactionDialogContent({ transaction, handleChange }: DialogFormProps
           value={transaction.monto}
           onChange={handleChange}
         />
-        <TextField
-          select
-          label="Tipo"
-          name="tipo"
-          value={transaction.tipo}
-          onChange={handleChange}
-        >
+        <TextField select label="Tipo" name="tipo" value={transaction.tipo} onChange={handleChange}>
           <MenuItem value="GASTO">Gasto</MenuItem>
           <MenuItem value="INGRESO">Ingreso</MenuItem>
         </TextField>
@@ -42,12 +40,20 @@ function TransactionDialogContent({ transaction, handleChange }: DialogFormProps
           slotProps={{ inputLabel: { shrink: true } }}
         />
         <TextField
-          label="Categoría (id)"
+          select
+          label="Categoría"
           name="categoriaId"
-          type="number"
-          value={transaction.categoriaId}
+          value={transaction.categoriaId || ""}
           onChange={handleChange}
-        />
+          disabled={isLoading}
+          helperText={isLoading ? "Cargando categorías..." : undefined}
+        >
+          {categorias.map((categoria: CategoryResponse) => (
+            <MenuItem key={categoria.id} value={categoria.id}>
+              {categoria.nombre}
+            </MenuItem>
+          ))}
+        </TextField>
       </Stack>
     </DialogContent>
   );

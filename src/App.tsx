@@ -1,10 +1,12 @@
-import { AppBar, Button, Container, CssBaseline, Toolbar, Typography } from "@mui/material";
+import { CssBaseline } from "@mui/material";
 import { useState } from "react";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { TOKEN_KEY } from "./api/axiosClient";
 import Login from "./components/Auth/Login";
-import AddTransaction from "./components/Transactions/AddTransaction";
+import Layout from "./components/Layout/Layout";
 import TransactionsList from "./components/Transactions/TransactionsList";
+import CategoriesList from "./components/Categories/CategoriesList";
 
 function App() {
   const queryClient = useQueryClient();
@@ -12,30 +14,21 @@ function App() {
 
   const handleLogout = () => {
     localStorage.removeItem(TOKEN_KEY);
-    queryClient.clear(); // borra los datos en caché del usuario anterior
+    queryClient.clear();
     setIsAuthenticated(false);
   };
 
   return (
     <>
       <CssBaseline />
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            FinTrak
-          </Typography>
-          {isAuthenticated && (
-            <Button color="inherit" onClick={handleLogout}>
-              Cerrar sesión
-            </Button>
-          )}
-        </Toolbar>
-      </AppBar>
-
       {isAuthenticated ? (
-        <Container maxWidth="xl" sx={{ mt: 3 }}>
-          <TransactionsList />
-        </Container>
+        <Routes>
+          <Route element={<Layout onLogout={handleLogout} />}>
+            <Route path="/transacciones" element={<TransactionsList />} />
+            <Route path="/categorias" element={<CategoriesList />} />
+            <Route path="*" element={<Navigate to="/transacciones" replace />} />
+          </Route>
+        </Routes>
       ) : (
         <Login onLogin={() => setIsAuthenticated(true)} />
       )}
