@@ -7,9 +7,10 @@ import { TOKEN_KEY } from "../../api/axiosClient";
 
 type LoginProps = {
   onLogin: () => void;
+  sessionExpired?: boolean;
 };
 
-function Login({ onLogin }: LoginProps) {
+function Login({ onLogin, sessionExpired = false }: LoginProps) {
   const [credentials, setCredentials] = useState<LoginRequest>({ email: "", password: "" });
 
   const { mutate, isLoading, isError, error } = useMutation<LoginResponse, AxiosError, LoginRequest>(login, {
@@ -34,7 +35,11 @@ function Login({ onLogin }: LoginProps) {
         <Typography variant="h5" sx={{ mb: 3 }}>
           Iniciar sesión
         </Typography>
-
+        {sessionExpired && (
+          <Alert severity="info" sx={{ mb: 2 }}>
+            Tu sesión expiró. Inicia sesión de nuevo.
+          </Alert>
+        )}
         <form onSubmit={handleSubmit}>
           <Stack spacing={2}>
             <TextField

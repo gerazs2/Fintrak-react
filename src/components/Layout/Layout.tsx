@@ -18,6 +18,8 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import CategoryIcon from "@mui/icons-material/Category";
 import { useState } from "react";
+import { getCurrentMonth } from "../../utils/format";
+import type { SelectedMonthContext } from "../../hooks/useSelectedMonth";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 const DRAWER_WIDTH = 220;
@@ -35,6 +37,7 @@ function Layout({ onLogout }: LayoutProps) {
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [mes, setMes] = useState<Date>(getCurrentMonth); // mes compartido entre páginas
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -89,7 +92,7 @@ function Layout({ onLogout }: LayoutProps) {
 
       <Box component="main" sx={{ flexGrow: 1, p: 3, minWidth: 0 }}>
         <Toolbar />
-        <Outlet />
+        <Outlet context={{ mes, setMes } satisfies SelectedMonthContext} />
       </Box>
     </Box>
   );

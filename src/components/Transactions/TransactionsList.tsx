@@ -6,16 +6,22 @@ import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import { esES } from "@mui/x-data-grid/locales";
 import type { PageResponse, TransactionResponse } from "../../types/TransactionType";
 import { deleteTransaction, getTransactions } from "../../api/transactionApi";
-import { formatCurrency, formatDate } from "../../utils/format";
+import { formatCurrency, formatDate, getMonthRange } from "../../utils/format";
+import { useSelectedMonth } from "../../hooks/useSelectedMonth";
+import MonthSelector from "../common/MonthSelector";
 import AddTransaction from "./AddTransaction";
 import EditTransaction from "./EditTransaction";
 
 function TransactionsList() {
   const queryClient = useQueryClient();
 
-  const { data, error, isLoading, isError } = useQuery<PageResponse<TransactionResponse>, AxiosError>({
-    queryKey: ["transacciones"],
-    queryFn: getTransactions,
+  const { mes, setMes } = useSelectedMonth();
+  const { desde, hasta } = getMonthRange(mes);
+
+  const { data, error, isLoading, isFetching, isError } = useQuery<PageResponse<TransactionResponse>, AxiosError>({
+    queryKey: ["transacciones", desde, hasta],
+    queryFn: () => getTransactions({ desde, hasta }),
+    keepPreviousData: true, // mantiene la tabla anterior mientras carga el nuevo mes
   });
 
   const { mutate } = useMutation(deleteTransaction, {
@@ -103,8 +109,13 @@ function TransactionsList() {
 
   return (
     <Box>
-      <Stack direction="row" sx={{ justifyContent: "space-between", alignItems: "center", mb: 2 }}>
+      <Stack
+        direction={{ xs: "column", sm: "row" }}
+        spacing={2}
+        sx={{ justifyContent: "space-between", alignItems: { xs: "stretch", sm: "center" }, mb: 2 }}
+      >
         <Typography variant="h5">Transacciones</Typography>
+        <MonthSelector value={mes} onChange={setMes} />
         <AddTransaction />
       </Stack>
 
@@ -117,7 +128,7 @@ function TransactionsList() {
       <DataGrid
         rows={data?.contenido ?? []}
         columns={columns}
-        loading={isLoading}
+        loading={isLoading || isFetching}
         localeText={esES.components.MuiDataGrid.defaultProps.localeText}
         initialState={{
           sorting: { sortModel: [{ field: "fecha", sort: "desc" }] },

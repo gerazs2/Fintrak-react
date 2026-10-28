@@ -14,3 +14,22 @@ export const formatDate = (fecha: string): string =>
     month: "short",
     year: "numeric",
   });
+
+// primer día del mes actual
+export const getCurrentMonth = (): Date => {
+  const today = new Date();
+  return new Date(today.getFullYear(), today.getMonth(), 1);
+};
+
+// primer y último día del mes de la fecha dada, en formato yyyy-MM-dd
+export const getMonthRange = (date: Date) => {
+  const desde = new Date(date.getFullYear(), date.getMonth(), 1);
+  const hasta = new Date(date.getFullYear(), date.getMonth() + 1, 0); // día 0 = último del mes anterior
+  return { desde: toISODate(desde), hasta: toISODate(hasta) };
+};
+
+// "Octubre de 2026"
+export const formatMonth = (date: Date): string => {
+  const text = date.toLocaleDateString("es-MX", { month: "long", year: "numeric" });
+  return text.charAt(0).toUpperCase() + text.slice(1);
+};

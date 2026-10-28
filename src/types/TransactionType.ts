@@ -28,3 +28,8 @@ export type TransactionRequest = {
   descripcion: string;
   categoriaId: number;
 };
+
+export type TransactionFilters = {
+  desde: string;
+  hasta: string;
+};

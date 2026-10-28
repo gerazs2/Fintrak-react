@@ -1,8 +1,10 @@
-import type { PageResponse, TransactionRequest, TransactionResponse } from "../types/TransactionType";
+import type { PageResponse, TransactionFilters, TransactionRequest, TransactionResponse } from "../types/TransactionType";
 import api from "./axiosClient";
 
-export const getTransactions = async (): Promise<PageResponse<TransactionResponse>> => {
-  const response = await api.get<PageResponse<TransactionResponse>>("/transacciones");
+export const getTransactions = async (filters: TransactionFilters): Promise<PageResponse<TransactionResponse>> => {
+  const response = await api.get<PageResponse<TransactionResponse>>("/transacciones", {
+    params: { ...filters, size: 100 },
+  });
   return response.data;
 };
 
