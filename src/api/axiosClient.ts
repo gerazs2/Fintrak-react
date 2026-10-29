@@ -2,6 +2,7 @@ import axios, { AxiosError } from "axios";
 
 export const TOKEN_KEY = "fintrak_token";
 export const SESSION_EXPIRED_EVENT = "fintrak:session-expired";
+export const TOKEN_CHANGED_EVENT = "fintrak:token-changed";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -29,5 +30,11 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+// guarda un token nuevo y avisa a App para que reprograme el cierre de sesión
+export const saveToken = (token: string) => {
+  localStorage.setItem(TOKEN_KEY, token);
+  window.dispatchEvent(new Event(TOKEN_CHANGED_EVENT));
+};
 
 export default api;

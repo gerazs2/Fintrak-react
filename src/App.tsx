@@ -2,13 +2,14 @@ import { CssBaseline } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import { SESSION_EXPIRED_EVENT, TOKEN_KEY } from "./api/axiosClient";
+import { SESSION_EXPIRED_EVENT, TOKEN_CHANGED_EVENT, TOKEN_KEY } from "./api/axiosClient";
 import { getTokenExpiration, isTokenValid } from "./utils/auth";
 import Login from "./components/Auth/Login";
 import Layout from "./components/Layout/Layout";
 import TransactionsList from "./components/Transactions/TransactionsList";
 import CategoriesList from "./components/Categories/CategoriesList";
 import SummaryPage from "./components/Summary/SummaryPage";
+import ProfilePage from "./components/Profile/ProfilePage";
 
 function App() {
   const queryClient = useQueryClient();
@@ -40,6 +41,16 @@ function App() {
     return () => window.removeEventListener(SESSION_EXPIRED_EVENT, handleExpired);
   }, [logout]);
 
+  // cuando se guarda un token nuevo (por ejemplo al cambiar la contraseña),
+  // tokenVersion cambia y el temporizador de abajo se reprograma con la nueva expiración
+  const [tokenVersion, setTokenVersion] = useState(0);
+
+  useEffect(() => {
+    const handleTokenChanged = () => setTokenVersion((v) => v + 1);
+    window.addEventListener(TOKEN_CHANGED_EVENT, handleTokenChanged);
+    return () => window.removeEventListener(TOKEN_CHANGED_EVENT, handleTokenChanged);
+  }, []);
+
   // capa 2: cierra la sesión justo cuando vence el token
   useEffect(() => {
     if (!isAuthenticated) return;
@@ -50,7 +61,7 @@ function App() {
 
     const timeoutId = setTimeout(() => logout(true), expiration - Date.now());
     return () => clearTimeout(timeoutId);
-  }, [isAuthenticated, logout]);
+  }, [isAuthenticated, logout, tokenVersion]);
 
   const handleLogin = () => {
     setSessionExpired(false);
@@ -66,7 +77,8 @@ function App() {
             <Route path="/resumen" element={<SummaryPage />} />
             <Route path="/transacciones" element={<TransactionsList />} />
             <Route path="/categorias" element={<CategoriesList />} />
-<Route path="*" element={<Navigate to="/resumen" replace />} />          </Route>
+            <Route path="/perfil" element={<ProfilePage />} />
+            <Route path="*" element={<Navigate to="/resumen" replace />} />          </Route>
         </Routes>
       ) : (
         <Login onLogin={handleLogin} sessionExpired={sessionExpired} />

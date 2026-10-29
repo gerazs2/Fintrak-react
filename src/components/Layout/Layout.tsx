@@ -10,6 +10,7 @@ import {
   ListItemIcon,
   ListItemText,
   Toolbar,
+  Tooltip,
   Typography,
   useMediaQuery,
   useTheme,
@@ -22,7 +23,7 @@ import { getCurrentMonth } from "../../utils/format";
 import type { SelectedMonthContext } from "../../hooks/useSelectedMonth";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-
+import SettingsIcon from "@mui/icons-material/Settings";
 
 const DRAWER_WIDTH = 220;
 
@@ -61,6 +62,11 @@ function Layout({ onLogout }: LayoutProps) {
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
             FinTrak
           </Typography>
+          <Tooltip title="Mi perfil">
+            <IconButton color="inherit" onClick={() => navigate("/perfil")} sx={{ mr: 1 }}>
+              <SettingsIcon />
+            </IconButton>
+          </Tooltip>
           <Button color="inherit" onClick={onLogout}>
             Cerrar sesión
           </Button>
