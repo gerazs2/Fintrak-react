@@ -11,6 +11,7 @@ import { useSelectedMonth } from "../../hooks/useSelectedMonth";
 import MonthSelector from "../Common/MonthSelector";
 import AddTransaction from "./AddTransaction";
 import EditTransaction from "./EditTransaction";
+import PendientesList from "./PendientesList";
 
 function TransactionsList() {
   const queryClient = useQueryClient();
@@ -124,6 +125,8 @@ function TransactionsList() {
           Error {error.response?.status}: {error.message}
         </Alert>
       )}
+
+      <PendientesList />
 
       <DataGrid
         rows={data?.contenido ?? []}

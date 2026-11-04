@@ -6,9 +6,10 @@ import type { CategoryResponse } from "../../types/CategoryTypes";
 type DialogFormProps = {
   transaction: TransactionRequest;
   handleChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  children?: React.ReactNode;
 };
 
-function TransactionDialogContent({ transaction, handleChange }: DialogFormProps) {
+function TransactionDialogContent({ transaction, handleChange, children }: DialogFormProps) {
   const { data: categorias = [], isLoading } = useCategories();
 
   return (
@@ -54,6 +55,7 @@ function TransactionDialogContent({ transaction, handleChange }: DialogFormProps
             </MenuItem>
           ))}
         </TextField>
+        {children}
       </Stack>
     </DialogContent>
   );
