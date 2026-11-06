@@ -1,4 +1,4 @@
-import type { PendienteResponse, RecurrenteRequest } from "../types/RecurrenteTypes";
+import type { PendienteResponse, RecurrenteRequest, RecurrenteResponse } from "../types/RecurrenteTypes";
 import api from "./axiosClient";
 
 export const addRecurrente = async (recurrente: RecurrenteRequest) => {
@@ -17,4 +17,14 @@ export const confirmarPendiente = async (id: number): Promise<void> => {
 
 export const omitirPendiente = async (id: number): Promise<void> => {
   await api.post(`/recurrentes/pendientes/${id}/omitir`);
+};
+
+
+export const getRecurrentes = async (): Promise<RecurrenteResponse[]> => {
+  const response = await api.get<RecurrenteResponse[]>("/recurrentes");
+  return response.data;
+};
+
+export const deleteRecurrente = async (id: number): Promise<void> => {
+  await api.delete(`/recurrentes/${id}`);
 };

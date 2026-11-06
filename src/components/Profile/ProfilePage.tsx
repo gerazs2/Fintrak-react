@@ -6,6 +6,7 @@ import type { PerfilResponse } from "../../types/ProfileTypes";
 import { changePassword, getProfile, updateProfile } from "../../api/profileApi";
 import { saveToken } from "../../api/axiosClient";
 import { getApiErrorMessage } from "../../utils/apiError";
+import RecurrentesSection from "./RecurrentesSection";
 
 const MIN_PASSWORD_LENGTH = 8;
 
@@ -104,87 +105,108 @@ function ProfilePage() {
   };
 
   return (
-    <Box sx={{ maxWidth: 560 }}>
+    <Box sx={{ maxWidth: 1100 }}>  {/* 1. más ancho para que quepan dos columnas */}
       <Typography variant="h5" sx={{ mb: 3 }}>
         Mi perfil
       </Typography>
 
-      {/* Datos de la cuenta */}
-      <Paper variant="outlined" sx={{ p: 3, mb: 3 }}>
-        <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
-          Datos de la cuenta
-        </Typography>
+      {/* 2. la cuadrícula: 1 columna en celular, 2 en pantallas medianas o más */}
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+          gap: 3,
+          alignItems: "start", // 4. cada columna mide lo que necesita
+        }}
+      >
+        {/* 3. columna izquierda: datos + contraseña */}
+        <Box>
+          {/* Datos de la cuenta */}
+          <Paper variant="outlined" sx={{ p: 3, mb: 3 }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
+              Datos de la cuenta
+            </Typography>
 
-        {profile.isLoading ? (
-          <Stack spacing={2}>
-            <Skeleton height={56} />
-            <Skeleton height={56} />
-          </Stack>
-        ) : profile.isError ? (
-          <Alert severity="error">No se pudo cargar tu perfil</Alert>
-        ) : (
-          <ProfileDataForm profile={profile.data} />
-        )}
-      </Paper>
-
-      {/* Cambiar contraseña */}
-      <Paper variant="outlined" sx={{ p: 3 }}>
-        <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
-          Cambiar contraseña
-        </Typography>
-
-        <form onSubmit={handleSavePassword}>
-          <Stack spacing={2}>
-            <TextField
-              label="Contraseña actual"
-              name="passwordActual"
-              type="password"
-              autoComplete="current-password"
-              value={passwords.passwordActual}
-              onChange={handlePasswordChange}
-              required
-              fullWidth
-            />
-            <TextField
-              label="Nueva contraseña"
-              name="passwordNueva"
-              type="password"
-              autoComplete="new-password"
-              value={passwords.passwordNueva}
-              onChange={handlePasswordChange}
-              error={nuevaMuyCorta}
-              helperText={`Mínimo ${MIN_PASSWORD_LENGTH} caracteres`}
-              required
-              fullWidth
-            />
-            <TextField
-              label="Confirmar nueva contraseña"
-              name="confirmar"
-              type="password"
-              autoComplete="new-password"
-              value={passwords.confirmar}
-              onChange={handlePasswordChange}
-              error={noCoinciden}
-              helperText={noCoinciden ? "Las contraseñas no coinciden" : " "}
-              required
-              fullWidth
-            />
-
-            {passwordMutation.isSuccess && <Alert severity="success">Contraseña actualizada</Alert>}
-            {passwordMutation.isError && (
-              <Alert severity="error">
-                {getApiErrorMessage(passwordMutation.error, "No se pudo cambiar la contraseña")}
-              </Alert>
+            {profile.isLoading ? (
+              <Stack spacing={2}>
+                <Skeleton height={56} />
+                <Skeleton height={56} />
+              </Stack>
+            ) : profile.isError ? (
+              <Alert severity="error">No se pudo cargar tu perfil</Alert>
+            ) : (
+              <ProfileDataForm profile={profile.data} />
             )}
+          </Paper>
 
-            <Box>
-              <Button type="submit" variant="contained" disabled={!puedeCambiar || passwordMutation.isLoading}>
-                {passwordMutation.isLoading ? "Guardando..." : "Cambiar contraseña"}
-              </Button>
-            </Box>
-          </Stack>
-        </form>
-      </Paper>
+          {/* Cambiar contraseña */}
+          <Paper variant="outlined" sx={{ p: 3 }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
+              Cambiar contraseña
+            </Typography>
+
+            <form onSubmit={handleSavePassword}>
+              <Stack spacing={2}>
+                <TextField
+                  label="Contraseña actual"
+                  name="passwordActual"
+                  type="password"
+                  autoComplete="current-password"
+                  value={passwords.passwordActual}
+                  onChange={handlePasswordChange}
+                  required
+                  fullWidth
+                />
+                <TextField
+                  label="Nueva contraseña"
+                  name="passwordNueva"
+                  type="password"
+                  autoComplete="new-password"
+                  value={passwords.passwordNueva}
+                  onChange={handlePasswordChange}
+                  error={nuevaMuyCorta}
+                  helperText={`Mínimo ${MIN_PASSWORD_LENGTH} caracteres`}
+                  required
+                  fullWidth
+                />
+                <TextField
+                  label="Confirmar nueva contraseña"
+                  name="confirmar"
+                  type="password"
+                  autoComplete="new-password"
+                  value={passwords.confirmar}
+                  onChange={handlePasswordChange}
+                  error={noCoinciden}
+                  helperText={noCoinciden ? "Las contraseñas no coinciden" : " "}
+                  required
+                  fullWidth
+                />
+
+                {passwordMutation.isSuccess && <Alert severity="success">Contraseña actualizada</Alert>}
+                {passwordMutation.isError && (
+                  <Alert severity="error">
+                    {getApiErrorMessage(passwordMutation.error, "No se pudo cambiar la contraseña")}
+                  </Alert>
+                )}
+
+                <Box>
+                  <Button type="submit" variant="contained" disabled={!puedeCambiar || passwordMutation.isLoading}>
+                    {passwordMutation.isLoading ? "Guardando..." : "Cambiar contraseña"}
+                  </Button>
+                </Box>
+              </Stack>
+            </form>
+          </Paper>
+        </Box>
+
+        {/* columna derecha: recurrentes (5. sin mt, la separación la da el gap) */}
+        <Paper variant="outlined" sx={{ p: 3 }}>
+          <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
+            Mis recurrentes
+          </Typography>
+          <RecurrentesSection />
+        </Paper>
+      </Box>
     </Box>
   );
 }
