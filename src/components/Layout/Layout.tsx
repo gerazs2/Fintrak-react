@@ -4,6 +4,7 @@ import {
   Button,
   Drawer,
   IconButton,
+  LinearProgress,
   List,
   ListItem,
   ListItemButton,
@@ -24,6 +25,7 @@ import type { SelectedMonthContext } from "../../hooks/useSelectedMonth";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import SettingsIcon from "@mui/icons-material/Settings";
+import { useIsFetching, useIsMutating } from "@tanstack/react-query";
 
 const DRAWER_WIDTH = 220;
 
@@ -44,6 +46,7 @@ function Layout({ onLogout }: LayoutProps) {
   const [mes, setMes] = useState<Date>(getCurrentMonth); // mes compartido entre páginas
   const navigate = useNavigate();
   const location = useLocation();
+  const isBusy = useIsFetching() + useIsMutating() > 0;
 
   const handleNavigate = (path: string) => {
     navigate(path);
@@ -71,6 +74,12 @@ function Layout({ onLogout }: LayoutProps) {
             Cerrar sesión
           </Button>
         </Toolbar>
+        {isBusy && (
+          <LinearProgress
+            color="inherit"
+            sx={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 3 }}
+          />
+        )}
       </AppBar>
 
       <Drawer
