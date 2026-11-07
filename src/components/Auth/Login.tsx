@@ -5,7 +5,7 @@ import type { AxiosError } from "axios";
 import { login, type LoginRequest, type LoginResponse } from "../../api/authApi";
 import { TOKEN_KEY } from "../../api/axiosClient";
 import PasswordField from "../Common/PasswordField";
-import RegisterForm from "./Register";
+import Register from "./Register";
 
 type LoginProps = {
   onLogin: () => void;
@@ -33,7 +33,7 @@ function Login({ onLogin, sessionExpired = false }: LoginProps) {
   };
 
   if (modoRegistro) {
-    return <RegisterForm onBack={() => setModoRegistro(false)} />;
+    return <Register onBack={() => setModoRegistro(false)} onLogin={onLogin} />;
   }
 
   return (
