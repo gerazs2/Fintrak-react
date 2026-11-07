@@ -4,6 +4,8 @@ import { useMutation } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 import { login, type LoginRequest, type LoginResponse } from "../../api/authApi";
 import { TOKEN_KEY } from "../../api/axiosClient";
+import PasswordField from "../Common/PasswordField";
+import RegisterForm from "./Register";
 
 type LoginProps = {
   onLogin: () => void;
@@ -12,6 +14,7 @@ type LoginProps = {
 
 function Login({ onLogin, sessionExpired = false }: LoginProps) {
   const [credentials, setCredentials] = useState<LoginRequest>({ email: "", password: "" });
+  const [modoRegistro, setModoRegistro] = useState(false);
 
   const { mutate, isLoading, isError, error } = useMutation<LoginResponse, AxiosError, LoginRequest>(login, {
     onSuccess: (data) => {
@@ -28,6 +31,10 @@ function Login({ onLogin, sessionExpired = false }: LoginProps) {
     event.preventDefault(); // evita que el form recargue la página
     mutate(credentials);
   };
+
+  if (modoRegistro) {
+    return <RegisterForm onBack={() => setModoRegistro(false)} />;
+  }
 
   return (
     <Box sx={{ display: "flex", justifyContent: "center", mt: 8 }}>
@@ -51,7 +58,7 @@ function Login({ onLogin, sessionExpired = false }: LoginProps) {
               required
               autoFocus
             />
-            <TextField
+            <PasswordField
               label="Contraseña"
               name="password"
               type="password"
@@ -71,6 +78,9 @@ function Login({ onLogin, sessionExpired = false }: LoginProps) {
             <Button type="submit" variant="contained" disabled={isLoading}>
               {isLoading ? "Entrando..." : "Entrar"}
             </Button>
+
+            <Button onClick={() => setModoRegistro(true)}>¿No tienes cuenta? Regístrate</Button>
+
           </Stack>
         </form>
       </Paper>

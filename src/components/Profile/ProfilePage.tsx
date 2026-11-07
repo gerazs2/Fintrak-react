@@ -7,6 +7,7 @@ import { changePassword, getProfile, updateProfile } from "../../api/profileApi"
 import { saveToken } from "../../api/axiosClient";
 import { getApiErrorMessage } from "../../utils/apiError";
 import RecurrentesSection from "./RecurrentesSection";
+import PasswordField from "../Common/PasswordField";
 
 const MIN_PASSWORD_LENGTH = 8;
 
@@ -147,20 +148,18 @@ function ProfilePage() {
 
             <form onSubmit={handleSavePassword}>
               <Stack spacing={2}>
-                <TextField
+                <PasswordField
                   label="Contraseña actual"
                   name="passwordActual"
-                  type="password"
                   autoComplete="current-password"
                   value={passwords.passwordActual}
                   onChange={handlePasswordChange}
                   required
                   fullWidth
                 />
-                <TextField
+                <PasswordField
                   label="Nueva contraseña"
                   name="passwordNueva"
-                  type="password"
                   autoComplete="new-password"
                   value={passwords.passwordNueva}
                   onChange={handlePasswordChange}
@@ -169,10 +168,9 @@ function ProfilePage() {
                   required
                   fullWidth
                 />
-                <TextField
+                <PasswordField
                   label="Confirmar nueva contraseña"
                   name="confirmar"
-                  type="password"
                   autoComplete="new-password"
                   value={passwords.confirmar}
                   onChange={handlePasswordChange}
