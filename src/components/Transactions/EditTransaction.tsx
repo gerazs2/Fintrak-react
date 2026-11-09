@@ -43,6 +43,7 @@ function EditTransaction({ transactionData }: EditTransactionProps) {
     setTransaction((prev) => ({
       ...prev,
       [name]: name === "monto" || name === "categoriaId" ? Number(value) : value,
+      ... (name === "tipo" && { categoriaId: 0 }), // si cambia el tipo, resetea la categoría
     }));
   };
 
