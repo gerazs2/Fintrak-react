@@ -11,6 +11,7 @@ type DialogFormProps = {
 
 function TransactionDialogContent({ transaction, handleChange, children }: DialogFormProps) {
   const { data: categorias = [], isLoading } = useCategories();
+  const categoriasFiltradas = categorias.filter((categoria: CategoryResponse) => categoria.tipo === transaction.tipo);
 
   return (
     <DialogContent>
@@ -49,7 +50,7 @@ function TransactionDialogContent({ transaction, handleChange, children }: Dialo
           disabled={isLoading}
           helperText={isLoading ? "Cargando categorías..." : undefined}
         >
-          {categorias.map((categoria: CategoryResponse) => (
+          {categoriasFiltradas.map((categoria: CategoryResponse) => (
             <MenuItem key={categoria.id} value={categoria.id}>
               {categoria.nombre}
             </MenuItem>
