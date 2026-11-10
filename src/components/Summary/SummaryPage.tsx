@@ -9,6 +9,7 @@ import { formatCurrency, formatShortMonth, toYearMonth } from "../../utils/forma
 import { useSelectedMonth } from "../../hooks/useSelectedMonth";
 import MonthSelector from "../Common/MonthSelector";
 import SummaryCard from "./SummaryCard";
+import AiChat from "../Common/AiChat";
 
 const TREND_MONTHS = 6;
 
@@ -47,7 +48,9 @@ function SummaryPage() {
           No se pudo cargar el resumen ({summary.error.response?.status ?? summary.error.message})
         </Alert>
       )}
-
+      <Box sx={{ mt: 3 }}>
+        <AiChat mes={mes} />
+      </Box>
       {/* Tarjetas */}
       <Box
         sx={{
@@ -55,6 +58,7 @@ function SummaryPage() {
           gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" },
           gap: 2,
           mb: 3,
+          marginTop: 3,
         }}
       >
         <SummaryCard title="Ingresos" value={data?.ingresos} color="success.main" loading={summary.isLoading} />
